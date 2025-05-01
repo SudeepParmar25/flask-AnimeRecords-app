@@ -1,0 +1,49 @@
+
+{% extends 'base.html' %}
+{% block title %} Update {% endblock title %}
+    {% block body %}
+    
+
+    
+        
+    
+    <div class="container">
+        <h1>Update Your Anime Records</h1>
+        <form action="/update/{{anime.Sno}}" method="POST">
+            <div class="mb-2">
+                <label for="Roll" class="form-label">Anime Name</label>
+                <input type="text" class="form-control" name="Anime_name" id="Roll" value="{{anime.Anime_name}}" aria-describedby="emailHelp" required>
+
+            </div>
+            <div class="mb-2">
+                <label for="Name" class="form-label">Anime Description</label>
+                <input type="text" class="form-control" name="Anime_desc" value="{{anime.Anime_desc}}" id="Name" required>
+            </div>
+            <div class="mb-2">
+                <label for="Name" class="form-label">Anime Watch Link (Optional)</label>
+                <input type="url" class="form-control" name="Watch" id="Watch"
+                    >
+    
+            </div>
+            <div class="mb-2">
+                <label for="Watch_Status" class="form-label">Watch Status</label>
+                <select class="form-control" name="Watch_Status" id="Watch_Status" required>
+                    <option value="">Select status</option>
+                    <option value="Watching">Watching</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Planned">Planned</option>
+                    <option value="Dropped">Dropped</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-dark">Update</button>
+            
+        </form>
+    </div>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+        {% endblock body %}

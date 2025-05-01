@@ -1,0 +1,400 @@
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #01001f;
+    margin: 0;
+    padding: 0;
+    background-image: url('../images/peace.jpg'); /* Correct path */
+    background-size: cover; /* Ensures the image covers the entire screen */
+    background-position: center; /* Centers the background image */
+    background-attachment: fixed; /* Makes the background image fixed when scrolling */
+    color: #333; /* Sets the text color to ensure it's readable on top of the image */
+    font-size: 14px; /* Reducing the base font size */
+}
+
+/* Uniform font size for all navbar elements */
+.navbar, 
+.navbar * {
+    font-size: 0.95rem; /* or any size you prefer, like 14px */
+}
+
+/* Header and Title */
+h1 {
+    color: #000000; /* White text for contrast against the background image */
+    font-size: 2em; /* Reduced font size */
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* Container */
+.container {
+    margin-top: 20px;
+    padding: 15px; /* Reduced padding */
+    background-color: rgba(255, 255, 255, 0.8); /* Slight white background with transparency */
+    border-radius: 8px;
+    max-width: 1000px; /* Limiting container width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Form Styles */
+form.main-form {
+    background-color: #D3D3D3;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+/* Form Label */
+.form-label {
+    font-size: 1.1em; /* Slightly reduced label font size */
+    font-weight: bold;
+    color: #333;
+}
+
+/* Form Control */
+.form-control {
+    margin-bottom: 10px; /* Reduced margin */
+    padding: 8px; /* Reduced padding */
+    border-radius: 5px;
+    border: 1px solid #000000;
+    font-size: 0.95em; /* Slightly smaller font */
+}
+
+.form-control:focus {
+    border-color: #000000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Button Styles */
+button.btn-dark {
+    background-color: #000000;
+    border: none;
+    color: white;
+    padding: 8px 15px; /* Reduced padding */
+    font-size: 0.95em; /* Slightly smaller font */
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+button.btn-dark:hover {
+    background-color: #000000;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+}
+
+/* Table Styles */
+.table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 10px; /* Reduced padding */
+    text-align: left;
+    font-size: 0.95em; /* Slightly smaller font */
+}
+
+.table th {
+    background-color: #000000;
+    color: #D3D3D3;
+}
+
+.table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.table-hover tr:hover {
+    background-color: #f1f1f1;
+}
+
+.table-bordered th, .table-bordered td {
+    border: 1px solid #ddd;
+}
+
+/* Alerts */
+.alert {
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.alert-dark {
+    background-color: #333;
+    color: white;
+}
+
+/* === RESPONSIVE DESIGN IMPROVEMENTS === */
+
+/* Make images scale properly */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Container adjusts on smaller screens */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Navbar wraps neatly on small screens */
+.navbar {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.6em;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .form-control,
+    button.btn-dark,
+    .btn-sm {
+        width: 100%;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    /* Table scrollable on phones */
+    .table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Logo/image smaller on mobile */
+    img.input-group-text {
+        width: 120px !important;
+        height: auto !important;
+    }
+}
+
+/* Make buttons easier to click on tiny screens */
+@media (max-width: 480px) {
+    button.btn-dark {
+        padding: 10px;
+        font-size: 1em;
+    }
+}
+/* Anime Status Badge Styles */
+.status {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    color: white;
+}
+
+.status-watching { background-color: #28a745; }
+.status-completed { background-color: #007bff; }
+.status-onhold { background-color: #ffc107; color: #333; }
+.status-dropped { background-color: #dc3545; }
+.status-planned { background-color: #17a2b8; }
+
+
+/* === DARK MODE === */
+body.dark-mode {
+    background-color: #000000; /* fallback */
+    background-image: url('../images/peace.jpg'); /* same bg */
+    color: #e0e0e0;
+}
+
+/* Container dark */
+body.dark-mode .container {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Form dark */
+body.dark-mode form.main-form {
+    background-color: #222222;
+}
+
+/* Form label + control dark */
+body.dark-mode .form-label {
+    color: #e0e0e0;
+}
+
+body.dark-mode .form-control {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+body.dark-mode .form-control:focus {
+    border-color: #999;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+/* Table dark */
+body.dark-mode .table th {
+    background-color: #222;
+    color: #e0e0e0;
+}
+
+body.dark-mode .table td {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-mode .table-hover tr:hover {
+    background-color: #444;
+}
+
+/* Alert dark */
+body.dark-mode .alert-dark {
+    background-color: #111;
+    color: #e0e0e0;
+}
+
+/* Status badges - optionally make less bright */
+body.dark-mode .status-watching { background-color: #218838; }
+body.dark-mode .status-completed { background-color: #0056b3; }
+body.dark-mode .status-onhold { background-color: #b38600; color: #fff; }
+body.dark-mode .status-dropped { background-color: #a71d2a; }
+body.dark-mode .status-planned { background-color: #117a8b; }
+
+/* Dark mode navbar styles */
+body.dark-mode .navbar {
+    background-color: #111 !important; /* Dark background */
+    color: #e0e0e0;
+}
+
+
+
+/* Navbar links */
+body.dark-mode .navbar-nav .nav-link {
+    color: #e0e0e0 !important; /* Light color for text */
+}
+
+/* Active link in dark mode */
+body.dark-mode .navbar-nav .nav-link.active {
+    color: #ffffff !important;
+}
+
+/* Navbar links hover effect */
+body.dark-mode .navbar-nav .nav-link:hover {
+    color: #ffffff !important; /* On hover, links turn white */
+}
+
+/* Dropdown menu items */
+body.dark-mode .navbar .dropdown-menu {
+    background-color: #222; /* Dark background for dropdown */
+    color: #e0e0e0;
+}
+
+/* Dropdown item hover effect */
+body.dark-mode .navbar .dropdown-item:hover {
+    background-color: #444;
+    color: #fff;
+}
+
+/* Dark mode search bar */
+body.dark-mode .form-control {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+/* Dark mode search button */
+body.dark-mode .btn-dark {
+    background-color: #333 !important;
+    color: #fff;
+}
+
+/* Button hover effects */
+body.dark-mode .btn-dark:hover {
+    background-color: #555 !important;
+}
+
+/* Dark mode toggle button */
+body.dark-mode .dark-toggle-btn {
+    background-color: #333;
+    color: #fff;
+}
+
+/* Style for navbar logo */
+.navbar-brand img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Make sure the dark mode button text is readable */
+#darkModeToggle {
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* === Spacing between navbar, form, and table === */
+
+/* Add space below navbar */
+.navbar {
+    margin-bottom: 20px; /* adjust space as needed */
+}
+
+/* Add space below form */
+form.main-form {
+    margin-bottom: 30px; /* adjust space as needed */
+}
+
+/* === SMOOTH TRANSITIONS === */
+
+/* Universal smoother transitions (optional but powerful) */
+* {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Navbar links smooth hover */
+  .navbar-nav .nav-link {
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  /* Buttons smooth background and scale effect */
+  button.btn-dark {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  button.btn-dark:hover {
+    background-color: #000000;
+    transform: scale(1.05);
+  }
+  
+  /* Form control focus smooth border + shadow */
+  .form-control {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Dark mode button smoother */
+  #darkModeToggle {
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  /* Table row hover smooth */
+  .table-hover tr {
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Fade-in body on page load */
+  body {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  
+  body.loaded {
+    opacity: 1;
+  }
+  

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock title %}
+{% block body %}
+
+
+
+
+
+ 
+
+    <div class="container mt-5 p-4 ">
+        <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" class="logo"
+style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radius: 70%;">
+        <h1 class="text-center mb-4">About</h1>
+
+        <p>Welcome to <strong>Anime Records</strong> — your simple tool to track and explore anime titles with ease.</p>
+
+        <h4 class="mt-4">🎯 Our Mission</h4>
+        <p>We aim to provide anime lovers with a clean, minimal interface to search, bookmark, and log the anime they
+            love. Whether you're a seasoned fan or just starting, our platform is designed to make your experience
+            better.</p>
+
+        <h4 class="mt-4">👥 Who Am i</h4>
+        <p>Anime Records was created by a passionate developer and anime enthusiast as a personal project to learn
+            full-stack development and build something meaningful for the community.</p>
+
+        <h4 class="mt-4">📜 Disclaimer</h4>
+        <p>
+            Anime Records does not host or stream any anime content directly. We simply link to third-party sites like
+            Aniwatch and Hianime for convenience.
+            <br><br>
+            All logos, images, and content belong to their respective copyright holders. This site is made purely for
+            educational and informational purposes and does not claim ownership of any external content.
+            <br><br>
+            If you are a copyright holder and want any material removed, please contact us immediately and we will
+            comply.
+        </p>
+
+        <h4 class="mt-4">📩 Contact</h4>
+        <p>If you have any suggestions, questions, or concerns, feel free to reach out via the contact form or through
+            GitHub (if made public).</p>
+
+        <div class="text-center mt-5">
+            <a href="/" class="btn btn-dark">Back to Home</a>
+        </div>
+    </div>
+
+
+
+
+
+    {% endblock body %}

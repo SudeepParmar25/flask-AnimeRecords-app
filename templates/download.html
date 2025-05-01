@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Anime Watchlist</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+
+        h2 {
+            color: #222;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #343a40;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tr:hover {
+            background-color: #e9ecef;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        em {
+            color: #888;
+        }
+
+        small {
+            color: #777;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        /* Status badge styles */
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            color: white;
+        }
+
+        .status-watching { background-color: #28a745; }
+        .status-completed { background-color: #007bff; }
+        .status-onhold { background-color: #ffc107; color: #333; }
+        .status-dropped { background-color: #dc3545; }
+        .status-plan { background-color: #6c757d; }
+
+        /* Responsive table on small screens */
+        @media (max-width: 768px) {
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>📺 My Anime Watchlist</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Anime Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Watch Link</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for anime in allAnime %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ anime.Anime_name }}</td>
+                <td>{{ anime.Anime_desc }}</td>
+                <td>
+                    {% if anime.Watch_Status %}
+                        {% set status = anime.Watch_Status.lower() %}
+                        {% if 'watching' in status %}
+                            <span class="status status-watching">{{ anime.Watch_Status }}</span>
+                        {% elif 'completed' in status %}
+                            <span class="status status-completed">{{ anime.Watch_Status }}</span>
+                        {% elif 'on hold' in status %}
+                            <span class="status status-onhold">{{ anime.Watch_Status }}</span>
+                        {% elif 'dropped' in status %}
+                            <span class="status status-dropped">{{ anime.Watch_Status }}</span>
+                        {% elif 'plan' in status %}
+                            <span class="status status-plan">{{ anime.Watch_Status }}</span>
+                        {% else %}
+                            {{ anime.Watch_Status }}
+                        {% endif %}
+                    {% else %}
+                        <em>Not set</em>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if anime.Watch %}
+                        <a href="{{ anime.Watch }}" target="_blank">🔗 Watch</a>
+                    {% else %}
+                        <em>No link</em>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <small>Exported on: {{ export_date }}</small>
+
+</body>
+</html>
