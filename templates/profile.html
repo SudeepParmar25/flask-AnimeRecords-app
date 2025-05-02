@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block title %} Profile {% endblock title %}
+{% block body %}
+
+
+
+<h1>Welcome</h1>
+
+<div class="container text-center">
+
+    <h2>Your Anime List</h2>
+    {% if allAnime|length == 0 %}
+    <div class="alert alert-dark " role="alert">
+        No Anime Records Found!! Please Add Some Records...
+    </div>
+
+    {% else %}
+    <table class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Sno</th>
+                <th scope="col">Anime Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Date Created</th>
+                <th scope="col">Watch Status</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Anime_list in allAnime %}
+            <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{Anime_list.Anime_name}}</td>
+                <td>{{Anime_list.Anime_desc}}</td>
+                <td>{{Anime_list.Date_created}}</td>
+                <td>
+                    {% if Anime_list.Watch_Status %}
+                    {% set status = Anime_list.Watch_Status.lower() %}
+                    {% if 'watching' in status %}
+                    <span class="status status-watching">{{ Anime_list.Watch_Status }}</span>
+                    {% elif 'completed' in status %}
+                    <span class="status status-completed">{{ Anime_list.Watch_Status }}</span>
+                    {% elif 'planned' in status %}
+                    <span class="status status-planned">{{ Anime_list.Watch_Status }}</span>
+                    {% elif 'dropped' in status %}
+                    <span class="status status-dropped">{{ Anime_list.Watch_Status }}</span>
+                    {% else %}
+                    {{ Anime_list.Watch_Status }}
+                    {% endif %}
+                    {% else %}
+                    <em>Not set</em>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <a href="/update/{{Anime_list.Sno}}" class="btn btn-dark btn-sm mx-1" role="button">Update</a>
+                    <a href="/delete/{{Anime_list.Sno}}" class="btn btn-dark btn-sm mx-1" role="button">Delete</a>
+
+                    {% if Anime_list.Watch %}
+                    <a href="{{Anime_list.Watch}}" class="btn btn-dark btn-sm mx-1" target="_blank"
+                        role="button">Watch</a>
+                    {% endif %}
+                </td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    {% if allAnime|length > 0 %}
+    <a href="{{ url_for('download_watchlist') }}" class="btn btn-dark my-2">
+        📥 Download Watchlist
+    </a>
+
+    {% else %}
+
+    {% endif %}
+
+    <div class="text-center">
+        <a href="{{ url_for('logout') }}" class="btn btn-dark my-2">Logout</a>
+
+        <form action="{{ url_for('delete_account') }}" method="POST"
+            onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">
+            <button type="submit" class="btn btn-dark">Delete Account</button>
+        </form>
+    </div>
+
+</div>
+
+<!-- <a href="{{ url_for('logout') }}" class="btn btn-dark">Logout</a>
+
+    <form action="{{ url_for('delete_account') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This action cannot be undone.')">
+        <button type="submit">Delete Account</button>
+    </form> -->
+
+{% endblock body %}

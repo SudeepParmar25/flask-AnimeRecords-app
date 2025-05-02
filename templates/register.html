@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %} Register {% endblock title %}
+{% block body %}
+
+<div class="container text-center">
+    <h2>Register</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+        role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <form class="main-form" method="POST">
+
+        <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" class="logo"
+            style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radius: 70%;">
+
+        <div class="mb-2">
+            <label for="emailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="emailInput" placeholder="Enter your email"
+                value="{{ request.form.get('email', '') }}" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="passwordInput" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="passwordInput" placeholder="Enter password"
+                required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                title="Password must be at least 8 characters and contain uppercase, lowercase, number, and a special character.">
+
+        </div>
+        <div class="form-text text-start">
+            <ul class="mb-0">
+                
+                <li>Minimum 8 characters</li>
+                <li>At least 1 uppercase letter (A-Z)</li>
+                <li>At least 1 lowercase letter (a-z)</li>
+                <li>At least 1 number (0-9)</li>
+                <li>At least 1 special character (@ $ ! % * ? &)</li>
+            </ul>
+        </div>
+        <button type="submit" class="btn btn-dark">Register</button>
+    </form>
+
+    <div class="text-center mt-2">
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+</div>
+
+{% endblock body %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %} Login {% endblock title %}
+{% block body %}
+
+<div class="container text-center">
+    <h2>Login</h2>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form class="main-form" method="POST">
+
+        <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" class="logo"
+            style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radius: 70%;">
+
+        <div class="mb-2">
+            <label for="emailInput" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="emailInput" aria-describedby="emailHelp"
+                placeholder="Enter your email" required>
+        </div>
+
+        <div class="mb-2">
+            <label for="passwordInput" class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" id="passwordInput" placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="btn btn-dark">Login</button>
+    </form>
+
+    <div class="text-center mt-2">
+        <p>New user? <a href="{{ url_for('register') }}">Register</a></p>
+    </div>
+</div>
+
+{% endblock body %}
