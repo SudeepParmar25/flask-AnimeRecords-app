@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, U
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
+from flask import session
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///anime.db"
@@ -12,7 +13,6 @@ db = SQLAlchemy(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
-
 
 
 class User(db.Model, UserMixin):
@@ -38,10 +38,9 @@ class Anime_list(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 def is_strong_password(password):
-   
-    pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$'
-    return re.match(pattern, password)
+    return len(password) >= 8
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -55,7 +54,7 @@ def register():
             return redirect(url_for('register'))
         
         if not is_strong_password(password):
-            flash('Password must be at least 8 characters and contain uppercase, lowercase, number, and special character.', 'danger')
+            flash('Password must be at least 8 characters long.', 'danger')
             return render_template('register.html', email=email)
 
         if User.query.filter_by(email=email).first():
@@ -76,7 +75,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form.get('email')   
+        email = request.form.get('email')  
         password = request.form.get('password')
 
         if not email or not password:
@@ -95,6 +94,19 @@ def login():
 
         login_user(user)
         
+        if 'guest_list' in session and session['guest_list']:
+            for guest_anime in session['guest_list']:
+                new_anime = Anime_list(
+                    Anime_name=guest_anime['Anime_name'],
+                    Anime_desc=guest_anime['Anime_desc'],
+                    Watch=guest_anime['Watch'],
+                    Watch_Status=guest_anime['Watch_Status'],
+                    user_id=user.id
+                )
+                db.session.add(new_anime)
+            db.session.commit()
+            session.pop('guest_list', None) 
+
         return redirect(url_for('hello_world'))
 
     return render_template('login.html')
@@ -104,7 +116,6 @@ def login():
 @login_required
 def logout():
     logout_user()
-    
     return redirect(url_for('login'))
 
 
@@ -112,48 +123,60 @@ def logout():
 @login_required
 def delete_account():
     user = User.query.get(current_user.id)
-
-    
     Anime_list.query.filter_by(user_id=user.id).delete()
-
     db.session.delete(user)
     db.session.commit()
-
     logout_user()
     flash('Your account and watchlist have been deleted.', 'success')
-    return redirect(url_for('register'))
-
-
-
-
-
+    return redirect(url_for('hello_world'))
 
 
 @app.route("/", methods=['GET', 'POST'])
-@login_required
 def hello_world():
     if request.method == "POST":
-        Anime_name = request.form['Anime_name']
-        Anime_desc = request.form['Anime_desc']
-        Watch = request.form['Watch']
-        Watch_Status = request.form['Watch_Status']
-        Anime1 = Anime_list(
-            Anime_name=Anime_name,
-            Anime_desc=Anime_desc,
-            Watch=Watch,
-            Watch_Status=Watch_Status,
-            user_id=current_user.id
-        )
-        db.session.add(Anime1)
-        db.session.commit()
+        anime_name = request.form['Anime_name']
+        anime_desc = request.form['Anime_desc']
+        watch = request.form['Watch']
+        watch_status = request.form['Watch_Status']
+
+        if current_user.is_authenticated:
+            anime = Anime_list(
+                Anime_name=anime_name,
+                Anime_desc=anime_desc,
+                Watch=watch,
+                Watch_Status=watch_status,
+                user_id=current_user.id
+            )
+            db.session.add(anime)
+            db.session.commit()
+        else:
+            if 'guest_list' not in session:
+                session['guest_list'] = []
+            
+            guest_anime = {
+                "Anime_name": anime_name,
+                "Anime_desc": anime_desc,
+                "Watch": watch,
+                "Watch_Status": watch_status,
+                "Date_created": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            session['guest_list'].append(guest_anime)
+            session.modified = True
+
         return redirect(url_for('hello_world'))
 
-    allAnime = Anime_list.query.filter_by(user_id=current_user.id).all()
+    if current_user.is_authenticated:
+        allAnime = Anime_list.query.filter_by(user_id=current_user.id).all()
+    else:
+        allAnime = session.get('guest_list', [])
+
     return render_template("index.html", allAnime=allAnime)
 
+
+# Routes for logged-in users
 @app.route("/update/<int:Sno>", methods=['GET', 'POST'])
 @login_required
-def update(Sno):
+def update_db(Sno):
     anime = Anime_list.query.filter_by(Sno=Sno, user_id=current_user.id).first_or_404()
     if request.method == "POST":
         anime.Anime_name = request.form['Anime_name']
@@ -161,29 +184,73 @@ def update(Sno):
         anime.Watch = request.form['Watch']
         anime.Watch_Status = request.form['Watch_Status']
         db.session.commit()
-        return redirect("/")
+        return redirect(url_for('hello_world'))
 
     return render_template("update.html", anime=anime)
 
 @app.route("/delete/<int:Sno>")
 @login_required
-def delete(Sno):
+def delete_db(Sno):
     anime = Anime_list.query.filter_by(Sno=Sno, user_id=current_user.id).first_or_404()
     db.session.delete(anime)
     db.session.commit()
-    return redirect('/')
+    return redirect(url_for('hello_world'))
+
+
+# Routes for guest users
+@app.route("/guest_update/<int:index>", methods=['GET', 'POST'])
+def update_guest(index):
+    all_anime = session.get('guest_list', [])
+    if 0 <= index < len(all_anime):
+        anime_to_update = all_anime[index]
+
+        if request.method == "POST":
+            anime_to_update['Anime_name'] = request.form['Anime_name']
+            anime_to_update['Anime_desc'] = request.form['Anime_desc']
+            anime_to_update['Watch'] = request.form['Watch']
+            anime_to_update['Watch_Status'] = request.form['Watch_Status']
+            session.modified = True
+            return redirect(url_for('hello_world'))
+        
+        return render_template("update.html", anime=anime_to_update, index=index)
+    
+    flash("Anime not found.", "error")
+    return redirect(url_for('hello_world'))
+
+@app.route("/guest_delete/<int:index>")
+def delete_guest(index):
+    all_anime = session.get('guest_list', [])
+    if 0 <= index < len(all_anime):
+        all_anime.pop(index)
+        session.modified = True
+    else:
+        flash("Anime not found.", "error")
+    
+    return redirect(url_for('hello_world'))
+
 
 @app.route('/search', methods=['GET'])
-@login_required
 def search():
     query = request.args.get('query')
     if query:
-        search_results = Anime_list.query.filter_by(user_id=current_user.id).filter(
-            (Anime_list.Anime_name.ilike(f"%{query}%")) |
-            (Anime_list.Anime_desc.ilike(f"%{query}%"))
-        ).all()
+        if current_user.is_authenticated:
+            search_results = Anime_list.query.filter_by(user_id=current_user.id).filter(
+                (Anime_list.Anime_name.ilike(f"%{query}%")) |
+                (Anime_list.Anime_desc.ilike(f"%{query}%"))
+            ).all()
+        else:
+            all_anime = session.get('guest_list', [])
+            search_results = [
+                anime for anime in all_anime 
+                if query.lower() in anime['Anime_name'].lower() or 
+                   query.lower() in anime['Anime_desc'].lower()
+            ]
     else:
-        search_results = []
+        if current_user.is_authenticated:
+            search_results = Anime_list.query.filter_by(user_id=current_user.id).all()
+        else:
+            search_results = session.get('guest_list', [])
+
     return render_template("index.html", allAnime=search_results)
 
 @app.route("/about")
@@ -209,7 +276,6 @@ def profile():
     allAnime = Anime_list.query.filter_by(user_id=user_id).all()  
 
     return render_template('profile.html', allAnime=allAnime)
-
 
 
 if __name__ == "__main__":

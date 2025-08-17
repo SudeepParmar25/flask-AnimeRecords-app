@@ -2,22 +2,12 @@
 {% block title %} Home {% endblock title %}
 {% block body %}
 
-
-
-
-
-<div class="container " >
+<div class="container ">
     <form class="main-form" action="/" method="POST">
-        
-<img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" class="logo"
-style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radius: 70%;">
-
-
-                
+        <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="Logo" class="logo" style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radius: 70%;">
         <div class="mb-2">
             <label for="Roll" class="form-label">Anime Name</label>
             <input type="text" class="form-control" name="Anime_name" id="Roll" aria-describedby="emailHelp" required>
-
         </div>
         <div class="mb-2">
             <label for="Name" class="form-label">Anime Description</label>
@@ -25,9 +15,7 @@ style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radiu
         </div>
         <div class="mb-2">
             <label for="Name" class="form-label">Anime Watch Link (Optional)</label>
-            <input type="url" class="form-control" name="Watch" id="Watch"
-                >
-
+            <input type="url" class="form-control" name="Watch" id="Watch">
         </div>
         <div class="mb-2">
             <label for="Watch_Status" class="form-label">Watch Status</label>
@@ -40,20 +28,15 @@ style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radiu
             </select>
         </div>
         <button type="submit" class="btn btn-dark">Add</button>
-        
     </form>
-    
 </div>
 
 <div class="container text-center">
-
-    
     <h2>Your Anime List</h2>
     {% if allAnime|length == 0 %}
     <div class="alert alert-dark " role="alert">
         No Anime Records Found!! Please Add Some Records...
     </div>
-
     {% else %}
     <table class="table table-hover table-bordered">
         <thead>
@@ -72,7 +55,13 @@ style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radiu
                 <th scope="row">{{loop.index}}</th>
                 <td>{{Anime_list.Anime_name}}</td>
                 <td>{{Anime_list.Anime_desc}}</td>
-                <td>{{Anime_list.Date_created}}</td>
+                <td>
+                    {% if current_user.is_authenticated %}
+                        {{ Anime_list.Date_created }}
+                    {% else %}
+                        {{ Anime_list.Date_created }}
+                    {% endif %}
+                </td>
                 <td>
                     {% if Anime_list.Watch_Status %}
                         {% set status = Anime_list.Watch_Status.lower() %}
@@ -91,36 +80,31 @@ style="width: 205px; height: 200px; display: block; margin: 0 auto; border-radiu
                         <em>Not set</em>
                     {% endif %}
                 </td>
-                
                 <td>
-                    <a href="/update/{{Anime_list.Sno}}" class="btn btn-dark btn-sm mx-1" role="button">Update</a>
-                    <a href="/delete/{{Anime_list.Sno}}" class="btn btn-dark btn-sm mx-1" role="button">Delete</a>
-
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('update_db', Sno=Anime_list.Sno) }}" class="btn btn-dark btn-sm mx-1" role="button">Update</a>
+                        <a href="{{ url_for('delete_db', Sno=Anime_list.Sno) }}" class="btn btn-dark btn-sm mx-1" role="button">Delete</a>
+                    {% else %}
+                        <a href="{{ url_for('update_guest', index=loop.index0) }}" class="btn btn-dark btn-sm mx-1" role="button">Update</a>
+                        <a href="{{ url_for('delete_guest', index=loop.index0) }}" class="btn btn-dark btn-sm mx-1" role="button">Delete</a>
+                    {% endif %}
                     {% if Anime_list.Watch %}
-                    <a href="{{Anime_list.Watch}}" class="btn btn-dark btn-sm mx-1" target="_blank"
-                        role="button">Watch</a>
+                        <a href="{{Anime_list.Watch}}" class="btn btn-dark btn-sm mx-1" target="_blank" role="button">Watch</a>
                     {% endif %}
                 </td>
             </tr>
-
             {% endfor %}
         </tbody>
     </table>
     {% endif %}
 
     {% if allAnime|length > 0 %}
-    <a href="{{ url_for('download_watchlist') }}" class="btn btn-dark my-2">
-        📥 Download Watchlist
-    </a>
-{% else %}
-   
-{% endif %}
-    
-
+    {% if current_user.is_authenticated %}
+        <a href="{{ url_for('download_watchlist') }}" class="btn btn-dark my-2">📥 Download Watchlist</a>
+    {% endif %}
+    {% endif %}
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 
 {% endblock body %}
