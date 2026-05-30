@@ -18,7 +18,7 @@ A Flask-based web application that allows users to search, track, and manage ani
 - JavaScript
 
 ## Live Demo
-[AnimeRecords]((https://animerecords-sudeepparmar.onrender.com/))
+https://animerecords-sudeepparmar.onrender.com/
 
 ## Screenshots
 <img width="1919" height="938" alt="image" src="https://github.com/user-attachments/assets/57acc112-53f0-4900-b689-2444874e5ea4" />
